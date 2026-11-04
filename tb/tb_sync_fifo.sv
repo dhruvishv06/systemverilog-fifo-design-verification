@@ -54,11 +54,19 @@ module tb_sync_fifo;
         rst_n = 1;
         step(0, 0, '0);
         step(0, 1, '0); // Empty read ignored
+        step(1, 0, DATA_WIDTH'(55)); // Empty write-only
+        step(0, 0, '0); // Middle idle
+        step(1, 1, DATA_WIDTH'(56)); // Middle simultaneous
+        step(1, 0, DATA_WIDTH'(57)); // Middle write-only
+        step(0, 1, '0); // Middle read-only
+        step(0, 1, '0); // Return to empty
         step(1, 1, DATA_WIDTH'(99)); // Empty read+write accepts write only
         step(0, 1, '0);
         for (int i = 0; i < DEPTH; i++) step(1, 0, DATA_WIDTH'(i));
+        step(0, 0, '0); // Full idle
         step(1, 0, '1); // Full write ignored
         step(1, 1, DATA_WIDTH'(165)); // Full read+write accepted
+        step(0, 1, '0); // Full read-only (returns to middle)
         for (int i = 0; i < 2000; i++)
             step(1'($urandom_range(0,1)),
                  1'($urandom_range(0,1)),
