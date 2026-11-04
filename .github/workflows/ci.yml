@@ -5,9 +5,22 @@ on:
 jobs:
   verilator:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - depth: 4
+            width: 8
+            seed: 1
+          - depth: 16
+            width: 8
+            seed: 7
+          - depth: 32
+            width: 16
+            seed: 42
     steps:
       - uses: actions/checkout@v4
       - name: Install Verilator
         run: sudo apt-get update && sudo apt-get install -y verilator make g++
-      - name: Run self-checking testbench
-        run: make test
+      - name: Run self-checking testbench and SVA
+        run: make test DEPTH=${{ matrix.depth }} DATA_WIDTH=${{ matrix.width }} SEED=${{ matrix.seed }}
