@@ -48,6 +48,28 @@ module tb_sync_fifo;
         tests++;
     endtask
 
+    task automatic reset_during_traffic;
+        @(negedge clk);
+        wr_en = 0;
+        rd_en = 0;
+        #1 rst_n = 0;
+        model.delete();
+        #1;
+        assert (count == 0 && empty && !full && rd_data == '0)
+            else $fatal(1, "Asynchronous reset failed to clear FIFO state");
+        @(negedge clk);
+        rst_n = 1;
+        step(0, 1, '0); // Stale data must be inaccessible after reset.
+        $display("RESET CHECK: asynchronous reset during traffic passed");
+    endtask
+
+    initial begin
+        if ($test$plusargs("trace")) begin
+            $dumpfile("sim/fifo_waveform.vcd");
+            $dumpvars(0, tb_sync_fifo);
+        end
+    end
+
     initial begin
         int covered = 0;
         repeat (2) @(negedge clk);
@@ -67,11 +89,14 @@ module tb_sync_fifo;
         step(1, 0, '1); // Full write ignored
         step(1, 1, DATA_WIDTH'(165)); // Full read+write accepted
         step(0, 1, '0); // Full read-only (returns to middle)
+        reset_during_traffic(); // Reset with buffered data
         for (int i = 0; i < 2000; i++)
             step(1'($urandom_range(0,1)),
                  1'($urandom_range(0,1)),
                  DATA_WIDTH'($urandom));
         while (model.size() != 0) step(0, 1, '0);
+        for (int i = 0; i < DEPTH; i++) step(1, 0, DATA_WIDTH'(i));
+        reset_during_traffic(); // Reset from full
         for (int occ = 0; occ < 3; occ++) begin
             for (int op = 0; op < 4; op++) begin
                 if (coverage[occ][op] > 0) covered++;
