@@ -23,14 +23,14 @@ Single-clock FIFO with DATA_WIDTH > 0 and power-of-two DEPTH >= 2. Active-low as
 | F09 | Occupancy x operation coverage | 3 x 4 cross; all bins required | Done |
 | F10 | Count/flag invariants | Concurrent SVA | Done |
 | F11 | Reset during traffic and full | Asynchronous reset, model cleared | Done |
-| F12 | Code coverage | Verilator --coverage report | Instrumented; inspect report |
+| F12 | Code coverage | Verilator --coverage database | Inspect raw database or annotated report |
 | F13 | Waveform evidence | Verilator --trace VCD | Instrumented; inspect artifact |
 
 ## Functional coverage
 Occupancy bins: empty, partially occupied, full. Operation bins: idle, write-only, read-only, simultaneous. The testbench prints 12 hit counts and fails if any bin is unhit. This is manual functional coverage instrumentation, not a SystemVerilog covergroup.
 
 ## Code coverage
-Run `make coverage`. Verilator creates `sim/coverage/coverage.dat`, an annotated source directory, and merged Verilator `merged.dat`. **No code coverage percentage is claimed until results are inspected.** Coverage measures exercised code, not verification completeness.
+Run `make coverage`. The coverage driver writes the raw database to `sim/coverage/coverage.dat` after the simulation finishes. To generate an annotated report, run `verilator_coverage --annotate sim/coverage/annotated sim/coverage/coverage.dat`. Coverage measures exercised code, not verification completeness.
 
 ## Waveform
 Run `make waveform` to generate `sim/fifo_waveform.vcd`. Inspect `clk`, `rst_n`, `wr_en`, `rd_en`, `wr_data`, `rd_data`, `count`, `full`, and `empty` in GTKWave.

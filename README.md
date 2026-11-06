@@ -30,7 +30,7 @@ make coverage
 make waveform
 ```
 
-`make coverage` produces raw Verilator coverage data at `sim/coverage/coverage.dat`. For an annotated report, run `verilator_coverage --annotate sim/coverage/annotated sim/coverage/coverage.dat` locally.
+`make coverage` produces raw Verilator coverage data at `sim/coverage/coverage.dat`. The coverage driver writes this database explicitly for compatibility with Verilator 5.020. For an annotated report, run `verilator_coverage --annotate sim/coverage/annotated sim/coverage/coverage.dat` locally.
 `make waveform` produces `sim/fifo_waveform.vcd`, viewable in GTKWave.
 
 CI also uploads **fifo-verification-evidence** as a downloadable artifact from the latest successful Actions run. Generated evidence is intentionally not committed to the repository.
@@ -46,4 +46,4 @@ CI also uploads **fifo-verification-evidence** as a downloadable artifact from t
 | `.github/workflows/ci.yml` | CI regression and evidence upload |
 
 ## Status and limitations
-Earlier baseline CI passed. **The latest reset/coverage/waveform enhancements require confirmation from their new CI run.** The 12-bin functional metric is not equivalent to RTL code coverage or formal proof. This is a lightweight non-UVM simulation environment.
+The 12-bin functional metric is not equivalent to RTL code coverage or formal proof. This is a lightweight non-UVM simulation environment.
