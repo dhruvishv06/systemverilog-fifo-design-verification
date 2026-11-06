@@ -23,8 +23,8 @@ coverage:
 	mkdir -p sim/coverage
 	./$(BUILD_DIR)_cov/V$(TOP) +verilator+seed+$(SEED) +verilator+coverage+file+sim/coverage/coverage.dat
 	verilator_coverage --annotate sim/coverage/annotated sim/coverage/coverage.dat
-	verilator_coverage --write-info sim/coverage/coverage.info sim/coverage/coverage.dat
-	@echo "Coverage report: sim/coverage/annotated/ and sim/coverage/coverage.info"
+	verilator_coverage --write sim/coverage/merged.dat sim/coverage/coverage.dat
+	@echo "Coverage report: sim/coverage/annotated/ and sim/coverage/merged.dat"
 
 waveform:
 	$(VERILATOR) $(FLAGS) --trace --Mdir $(BUILD_DIR)_trace $(RTL) $(TB)
