@@ -36,7 +36,6 @@ jobs:
         with:
           name: fifo-verification-evidence
           path: |
-            sim/coverage/merged.dat
-            sim/coverage/annotated/
+            sim/coverage/coverage.dat
             sim/fifo_waveform.vcd
           if-no-files-found: error
