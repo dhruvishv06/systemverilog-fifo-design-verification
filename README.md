@@ -30,7 +30,7 @@ make coverage
 make waveform
 ```
 
-`make coverage` produces `sim/coverage/coverage.info` and annotated sources.
+`make coverage` produces `sim/coverage/merged.dat` and annotated sources.
 `make waveform` produces `sim/fifo_waveform.vcd`, viewable in GTKWave.
 
 CI also uploads **fifo-verification-evidence** as a downloadable artifact from the latest successful Actions run. Generated evidence is intentionally not committed to the repository.
