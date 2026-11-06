@@ -24,12 +24,26 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y verilator make g++
       - name: Run self-checking testbench and SVA
         run: make test DEPTH=${{ matrix.depth }} DATA_WIDTH=${{ matrix.width }} SEED=${{ matrix.seed }}
+      - name: Run make regression
+        if: matrix.depth == 16 && matrix.width == 8
+        run: make regression
       - name: Generate code coverage
         if: matrix.depth == 16 && matrix.width == 8
         run: make coverage DEPTH=16 DATA_WIDTH=8 SEED=7
       - name: Generate waveform
         if: matrix.depth == 16 && matrix.width == 8
         run: make waveform DEPTH=16 DATA_WIDTH=8 SEED=7
+      - name: Validate generated evidence
+        if: matrix.depth == 16 && matrix.width == 8
+        run: |
+          verilator_coverage --write-info /tmp/fifo.info sim/coverage/coverage.dat
+          grep -q '^SF:.*rtl/sync_fifo.sv' /tmp/fifo.info
+          grep -Eq '^DA:[0-9]+,[1-9][0-9]*' /tmp/fifo.info
+          sudo apt-get install -y gtkwave
+          vcd2fst sim/fifo_waveform.vcd /tmp/fifo.fst
+          test -s /tmp/fifo.fst
+          grep -q '^\$enddefinitions' sim/fifo_waveform.vcd
+          test "$(grep -c '^#[0-9]' sim/fifo_waveform.vcd)" -gt 100
       - name: Upload verification evidence
         if: matrix.depth == 16 && matrix.width == 8
         uses: actions/upload-artifact@v4
