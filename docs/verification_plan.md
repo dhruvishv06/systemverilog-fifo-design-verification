@@ -30,7 +30,7 @@ Single-clock FIFO with DATA_WIDTH > 0 and power-of-two DEPTH >= 2. Active-low as
 Occupancy bins: empty, partially occupied, full. Operation bins: idle, write-only, read-only, simultaneous. The testbench prints 12 hit counts and fails if any bin is unhit. This is manual functional coverage instrumentation, not a SystemVerilog covergroup.
 
 ## Code coverage
-Run `make coverage`. Verilator creates `sim/coverage/coverage.dat`, an annotated source directory, and LCOV-compatible `coverage.info`. **No code coverage percentage is claimed until results are inspected.** Coverage measures exercised code, not verification completeness.
+Run `make coverage`. Verilator creates `sim/coverage/coverage.dat`, an annotated source directory, and merged Verilator `merged.dat`. **No code coverage percentage is claimed until results are inspected.** Coverage measures exercised code, not verification completeness.
 
 ## Waveform
 Run `make waveform` to generate `sim/fifo_waveform.vcd`. Inspect `clk`, `rst_n`, `wr_en`, `rd_en`, `wr_data`, `rd_data`, `count`, `full`, and `empty` in GTKWave.
